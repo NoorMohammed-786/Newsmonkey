@@ -144,7 +144,7 @@ export default class Pages extends Component {
     //   "https://gnews.io/api/v4/search?q=example&lang=en&&max=100&apikey=e5e42a87004c15f193c11a2913401b9b&q=cricket&page=1";
     let data = await fetch(url);
     let parsedData = await data.json();
-    this.setState({ loading: false });
+    //this.setState({ loading: false });
     console.log(parsedData);
 
     this.setState({ articles: parsedData.articles, loading: false });
