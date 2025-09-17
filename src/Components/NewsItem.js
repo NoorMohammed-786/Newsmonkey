@@ -29,3 +29,5 @@ export class NewsItem extends Component {
 }
 
 export default NewsItem;
+
+

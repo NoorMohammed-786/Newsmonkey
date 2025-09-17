@@ -7,7 +7,7 @@ function App() {
   return (
     <div>
       <Navbar/>
-   < News pagesize={4}/>
+   < News pagesize={4} category="health"/>
     </div>
    
   );

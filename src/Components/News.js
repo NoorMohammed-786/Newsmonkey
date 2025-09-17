@@ -138,10 +138,9 @@ export default class Pages extends Component {
   async componentDidMount() {
     // let url = `https://gnews.io/api/v4/search?q=cricket&lang=en&page=1&apikey=e5e42a87004c15f193c11a2913401b9b&max=${this.props.pagesize}`;
     // this.setState({ loading: true });
-    let url = `https://gnews.io/api/v4/top-headlines?category=general&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${this.props.pagesize}`;
+    let url = `https://gnews.io/api/v4/top-headlines?category=${this.props.category}&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${this.props.pagesize}`;
     this.setState({ loading: true });
-    // let url =
-    //   "https://gnews.io/api/v4/search?q=example&lang=en&&max=100&apikey=e5e42a87004c15f193c11a2913401b9b&q=cricket&page=1";
+
     let data = await fetch(url);
     let parsedData = await data.json();
     //this.setState({ loading: false });
@@ -151,7 +150,9 @@ export default class Pages extends Component {
   }
   handlenextclick = async () => {
     console.log("next");
-    let url = `https://gnews.io/api/v4/top-headlines?category=general&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${
+    let url = `https://gnews.io/api/v4/top-headlines?category=${
+      this.props.category
+    }&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${
       this.props.pagesize
     }
     &page=${this.state.page + 1}`;
@@ -168,7 +169,9 @@ export default class Pages extends Component {
   };
   handlepreviousclick = async () => {
     console.log("previous");
-    let url = `https://gnews.io/api/v4/top-headlines?category=general&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${
+    let url = `https://gnews.io/api/v4/top-headlines?category=${
+      this.props.category
+    }&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${
       this.props.pagesize
     }&page=${this.state.page - 1}&pagesize=5`;
     this.setState({ loading: true });
@@ -185,7 +188,9 @@ export default class Pages extends Component {
     return (
       <div>
         <div className="container my-3">
-          <h2 className="text-center">News Monkey-Top HeadLines</h2>
+          <h2 className="text-center" style={{ margin: "30px" }}>
+            News Monkey-Top HeadLines
+          </h2>
           {this.state.loading && <Loading />}
           <div className="row ">
             {!this.state.Loading &&
