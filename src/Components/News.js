@@ -136,9 +136,9 @@ export default class Pages extends Component {
     console.log("Hello I am a constructor from News component");
   }
   async componentDidMount() {
-    // let url = `https://gnews.io/api/v4/search?q=cricket&lang=en&page=1&apikey=e5e42a87004c15f193c11a2913401b9b&max=${this.props.pagesize}`;
+    // let url = `https://gnews.io/api/v4/search?q=cricket&lang=en&page=1&apikey=e5e42a87004c15f193c11a2913401b9b----de0bbb9ac1928639e69d467f8d586f1a---&max=${this.props.pagesize}`;
     // this.setState({ loading: true });
-    let url = `https://gnews.io/api/v4/top-headlines?category=${this.props.category}&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${this.props.pagesize}`;
+    let url = `https://gnews.io/api/v4/top-headlines?category=${this.props.category}&lang=en&country=us&max=10&apikey=e5e42a87004c15f193c11a2913401b9b&max=${this.props.pagesize}`;
     this.setState({ loading: true });
 
     let data = await fetch(url);
@@ -209,7 +209,9 @@ export default class Pages extends Component {
                           ? element.image
                           : "https://www.shutterstock.com/image-photo/mountains-during-sunset-beautiful-natural-260nw-407021107.jpg"
                       }
+                      date={element.publishedAt}
                       newsUrl={element.url}
+                      source={element.source.name}
                     />
                   </div>
                 );
