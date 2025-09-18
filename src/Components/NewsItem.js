@@ -24,8 +24,8 @@ export class NewsItem extends Component {
           <p className="card-text">{Description}...</p>
           <p className="card-text">
             
-            <small className="text-muted">
-            on {new Date(date).toGMTString()}
+            <small className="text-danger" style={{fontSize: '13px', fontWeight: 'bold'}}>
+            On {new Date(date).toGMTString()}
             </small>
           </p>
           <a

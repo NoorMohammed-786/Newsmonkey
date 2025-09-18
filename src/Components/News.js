@@ -133,56 +133,28 @@ export default class Pages extends Component {
       loading: false,
       page: 1,
     };
-    console.log("Hello I am a constructor from News component");
   }
-  async componentDidMount() {
+  async Updated() {
     // let url = `https://gnews.io/api/v4/search?q=cricket&lang=en&page=1&apikey=e5e42a87004c15f193c11a2913401b9b----de0bbb9ac1928639e69d467f8d586f1a---&max=${this.props.pagesize}`;
     // this.setState({ loading: true });
     let url = `https://gnews.io/api/v4/top-headlines?category=${this.props.category}&lang=en&country=us&max=10&apikey=e5e42a87004c15f193c11a2913401b9b&max=${this.props.pagesize}`;
     this.setState({ loading: true });
-
     let data = await fetch(url);
     let parsedData = await data.json();
     //this.setState({ loading: false });
     console.log(parsedData);
-
     this.setState({ articles: parsedData.articles, loading: false });
   }
+    async componentDidMount() {
+    this.Updated();
+  }
   handlenextclick = async () => {
-    console.log("next");
-    let url = `https://gnews.io/api/v4/top-headlines?category=${
-      this.props.category
-    }&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${
-      this.props.pagesize
-    }
-    &page=${this.state.page + 1}`;
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
-
-    this.setState({
-      page: this.state.page + 1,
-      articles: parsedData.articles,
-      loading: false,
-    });
-    console.log("pages :", parsedData.articles);
+    this.setState({ page: this.state.page + 1 });
+    this.Updated();
   };
   handlepreviousclick = async () => {
-    console.log("previous");
-    let url = `https://gnews.io/api/v4/top-headlines?category=${
-      this.props.category
-    }&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${
-      this.props.pagesize
-    }&page=${this.state.page - 1}&pagesize=5`;
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
-
-    this.setState({
-      page: this.state.page - 1,
-      articles: parsedData.articles,
-      loading: false,
-    });
+    this.setState({ page: this.state.page - 1 });
+    this.Updated();
   };
   render() {
     return (
