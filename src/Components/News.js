@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Loading from "./Loading";
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default class Pages extends Component {
   // articles = [
@@ -135,21 +136,25 @@ export default class Pages extends Component {
       articles: [],
       error: null,
       loading: false,
+      totalResults: 0,
       page: 1,
+      length: 0
     };
-    document.title = `${this.capitalizeFirstLetter(this.props.category)}-NewsMonkey`;
+    document.title = `${this.capitalizeFirstLetter(
+      this.props.category
+    )}-NewsMonkey`;
   }
   async Updated() {
     // let url = `https://gnews.io/api/v4/search?q=cricket&lang=en&page=1&apikey=e5e42a87004c15f193c11a2913401b9b----de0bbb9ac1928639e69d467f8d586f1a---&max=${this.props.pagesize}`;
     // this.setState({ loading: true });
-    let url = `https://gnews.io/api/v4/top-headlines?category=${this.props.category}&lang=en&country=us&max=10&apikey=e5e42a87004c15f193c11a2913401b9b&max=${this.props.pagesize}`;
+    let url = `https://gnews.io/api/v4/top-headlines?category=${this.props.category}&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${this.props.pagesize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     //this.setState({ loading: false });
     //console.log(parsedData);
-   
-    this.setState({ articles: parsedData.articles, loading: false });
+
+    this.setState({ articles: parsedData.articles, loading: false ,totalResults: parsedData.totalResults});
   }
   async componentDidMount() {
     this.Updated();
@@ -162,19 +167,34 @@ export default class Pages extends Component {
     this.setState({ page: this.state.page - 1 });
     this.Updated();
   };
+  fetchMoreData = async() => {
+    this.setState({page: this.state.page + 1})
+    let url = `https://gnews.io/api/v4/top-headlines?category=${this.props.category}&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${this.props.pagesize}&page=${this.state.page+1}`;
+     this.setState({ loading: true });
+     let data = await fetch(url);
+    let parsedData = await data.json();
+   
+    this.setState({ articles: this.state.articles.concat(parsedData.articles), totalResults: parsedData.totalResults,loading: false })
+  }
 
   render() {
     return (
       <div>
-        <div className="container my-3">
+        <>
           <h2 className="text-center" style={{ margin: "30px" }}>
-            News Monkey-Top {this.capitalizeFirstLetter(this.props.category)} 
+            News Monkey-Top {this.capitalizeFirstLetter(this.props.category)}
             HeadLines
           </h2>
-          {this.state.loading && <Loading />}
-          <div className="row ">
-            {!this.state.Loading &&
-              this.state.articles.map((element) => {
+          {this.state.loading}
+          <InfiniteScroll
+            dataLength={this.state.articles.length} //This is important field to render the next data
+            next={this.fetchMoreData}
+            hasMore={this.state.articles.length !== this.totalResults}
+            loader={<Loading />}
+          >
+            <div className="container">
+            <div className="row ">
+              {this.state.articles.map((element) => {
                 return (
                   <div className="col-md-3" key={element.url}>
                     <NewsItem
@@ -196,22 +216,10 @@ export default class Pages extends Component {
                   </div>
                 );
               })}
-          </div>
-
-          {/* <div className="row my-5 ">
-          {this.state.articles.map((element) => {
-            return(<div className="col-md-3" key={element.url}>
-              <NewsItem
-                title={element.title}
-                newsUrl="https://www.google.com"
-                Description={element.description}
-                Imageurl={element.image}
-              />
-            </div>)
-            
-          })}
-        </div> */}
-        </div>
+            </div>
+            </div>
+          </InfiniteScroll>
+        </>
         <div className="container d-flex justify-content-between">
           <button
             type="button"
