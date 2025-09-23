@@ -125,14 +125,19 @@ export default class Pages extends Component {
   //     },
   //   },
   // ];
-  constructor() {
-    super();
+  capitalizeFirstLetter = (String) => {
+    return String.charAt(0).toUpperCase() + String.slice(1);
+  };
+
+  constructor(props) {
+    super(props);
     this.state = {
       articles: [],
       error: null,
       loading: false,
       page: 1,
     };
+    document.title = `${this.capitalizeFirstLetter(this.props.category)}-NewsMonkey`;
   }
   async Updated() {
     // let url = `https://gnews.io/api/v4/search?q=cricket&lang=en&page=1&apikey=e5e42a87004c15f193c11a2913401b9b----de0bbb9ac1928639e69d467f8d586f1a---&max=${this.props.pagesize}`;
@@ -142,10 +147,11 @@ export default class Pages extends Component {
     let data = await fetch(url);
     let parsedData = await data.json();
     //this.setState({ loading: false });
-    console.log(parsedData);
+    //console.log(parsedData);
+   
     this.setState({ articles: parsedData.articles, loading: false });
   }
-    async componentDidMount() {
+  async componentDidMount() {
     this.Updated();
   }
   handlenextclick = async () => {
@@ -156,12 +162,14 @@ export default class Pages extends Component {
     this.setState({ page: this.state.page - 1 });
     this.Updated();
   };
+
   render() {
     return (
       <div>
         <div className="container my-3">
           <h2 className="text-center" style={{ margin: "30px" }}>
-            News Monkey-Top HeadLines
+            News Monkey-Top {this.capitalizeFirstLetter(this.props.category)} 
+            HeadLines
           </h2>
           {this.state.loading && <Loading />}
           <div className="row ">
