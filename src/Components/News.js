@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Loading from "./Loading";
-import InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default class Pages extends Component {
   // articles = [
@@ -138,7 +138,7 @@ export default class Pages extends Component {
       loading: false,
       totalResults: 0,
       page: 1,
-      length: 0
+      length: 0,
     };
     document.title = `${this.capitalizeFirstLetter(
       this.props.category
@@ -147,14 +147,24 @@ export default class Pages extends Component {
   async Updated() {
     // let url = `https://gnews.io/api/v4/search?q=cricket&lang=en&page=1&apikey=e5e42a87004c15f193c11a2913401b9b----de0bbb9ac1928639e69d467f8d586f1a---&max=${this.props.pagesize}`;
     // this.setState({ loading: true });
+    this.props.setProgress(10);
     let url = `https://gnews.io/api/v4/top-headlines?category=${this.props.category}&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${this.props.pagesize}`;
     this.setState({ loading: true });
+    this.props.setProgress(30);
     let data = await fetch(url);
+    this.props.setProgress(70);
     let parsedData = await data.json();
+    this.props.setProgress(80);
     //this.setState({ loading: false });
     //console.log(parsedData);
 
-    this.setState({ articles: parsedData.articles, loading: false ,totalResults: parsedData.totalResults});
+    this.setState({
+      articles: parsedData.articles,
+      loading: false,
+      totalResults: parsedData.totalResults,
+    });
+     this.props.setProgress(100);
+    
   }
   async componentDidMount() {
     this.Updated();
@@ -167,15 +177,23 @@ export default class Pages extends Component {
     this.setState({ page: this.state.page - 1 });
     this.Updated();
   };
-  fetchMoreData = async() => {
-    this.setState({page: this.state.page + 1})
-    let url = `https://gnews.io/api/v4/top-headlines?category=${this.props.category}&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${this.props.pagesize}&page=${this.state.page+1}`;
-     this.setState({ loading: true });
-     let data = await fetch(url);
+  fetchMoreData = async () => {
+    this.setState({ page: this.state.page + 1 });
+    let url = `https://gnews.io/api/v4/top-headlines?category=${
+      this.props.category
+    }&lang=en&country=us&max=10&apikey=de0bbb9ac1928639e69d467f8d586f1a&max=${
+      this.props.pagesize
+    }&page=${this.state.page + 1}`;
+    this.setState({ loading: true });
+    let data = await fetch(url);
     let parsedData = await data.json();
-   
-    this.setState({ articles: this.state.articles.concat(parsedData.articles), totalResults: parsedData.totalResults,loading: false })
-  }
+
+    this.setState({
+      articles: this.state.articles.concat(parsedData.articles),
+      totalResults: parsedData.totalResults,
+      loading: false,
+    });
+  };
 
   render() {
     return (
@@ -192,31 +210,31 @@ export default class Pages extends Component {
             hasMore={this.state.articles.length !== this.totalResults}
             loader={<Loading />}
           >
-            <div className="container">
-            <div className="row ">
-              {this.state.articles.map((element) => {
-                return (
-                  <div className="col-md-3" key={element.url}>
-                    <NewsItem
-                      title={element.title ? element.title.slice(0, 45) : ""}
-                      Description={
-                        element.description
-                          ? element.description.slice(0, 88)
-                          : ""
-                      }
-                      Imageurl={
-                        element.image
-                          ? element.image
-                          : "https://www.shutterstock.com/image-photo/mountains-during-sunset-beautiful-natural-260nw-407021107.jpg"
-                      }
-                      date={element.publishedAt}
-                      newsUrl={element.url}
-                      source={element.source.name}
-                    />
-                  </div>
-                );
-              })}
-            </div>
+            <div className="Container">
+              <div className="row ">
+                {this.state.articles.map((element) => {
+                  return (
+                    <div className="col-md-3" key={element.url}>
+                      <NewsItem
+                        title={element.title ? element.title.slice(0, 45) : ""}
+                        Description={
+                          element.description
+                            ? element.description.slice(0, 88)
+                            : ""
+                        }
+                        Imageurl={
+                          element.image
+                            ? element.image
+                            : "https://www.shutterstock.com/image-photo/mountains-during-sunset-beautiful-natural-260nw-407021107.jpg"
+                        }
+                        date={element.publishedAt}
+                        newsUrl={element.url}
+                        source={element.source.name}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </InfiniteScroll>
         </>
