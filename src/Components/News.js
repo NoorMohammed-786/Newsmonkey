@@ -4,7 +4,6 @@ import Loading from "./Loading";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function Pages(props) {
-
   //   {
   //     id: "32b034b47ca850e54999ff5754e87fb1",
   //     title: "Afghanistan crush Hong Kong by 94 runs in Asia Cup opener",
@@ -136,7 +135,6 @@ export default function Pages(props) {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  
 
   const Updated = async () => {
     // let url = `https://gnews.io/api/v4/search?q=cricket&lang=en&page=1&apikey=e5e42a87004c15f193c11a2913401b9b----de0bbb9ac1928639e69d467f8d586f1a---&max=${props.pagesize}`;
@@ -154,18 +152,22 @@ export default function Pages(props) {
     setArticles(parsedData.articles);
     setLoading(false);
     setTotalResults(parsedData.totalResults);
-    
 
     props.setProgress(100);
   };
-  useEffect(() => {
-    Updated();
-    // eslint-disable-next-line
-  }, []);
+  useEffect(
+    () => {
+       document.title = `${capitalizeFirstLetter(props.category)}-NewsMonkey`;
+      Updated();
+      // eslint-disable-next-line
+    },
+   
+    []
+  );
   const handlenextclick = async () => {
-  setPage(page + 1);
-  Updated();  // pass value directly
-};
+    setPage(page + 1);
+    Updated(); // pass value directly
+  };
   const handlepreviousclick = async () => {
     setPage(page - 1);
     Updated();
@@ -173,7 +175,13 @@ export default function Pages(props) {
   const fetchMoreData = async () => {
     setPage(page + 1);
     props.setProgress(10);
-    let url = `https://gnews.io/api/v4/top-headlines?category=${props.category}&lang=en&page=${page}&country=india&max=10&apikey=e5e42a87004c15f193c11a2913401b9b&max=${props.pagesize}`;
+    let url = `https://gnews.io/api/v4/top-headlines?category=${
+      props.category
+    }&lang=en&page=${
+      page + 1
+    }&country=india&max=10&apikey=e5e42a87004c15f193c11a2913401b9b&max=${
+      props.pagesize
+    }`;
     setLoading(true);
     props.setProgress(30);
     let data = await fetch(url);
@@ -185,7 +193,6 @@ export default function Pages(props) {
     setArticles(articles.concat(parsedData.articles));
     setLoading(false);
     setTotalResults(parsedData.totalResults);
-    
 
     props.setProgress(100);
   };
@@ -193,10 +200,10 @@ export default function Pages(props) {
   return (
     <div>
       <>
-        <h2 className="text-center" style={{ margin: "30px" }}>
+        <h1 className="text-center" style={{ margin: "30px", marginTop: "80px" }}>
           News Monkey-Top {capitalizeFirstLetter(props.category)}
           HeadLines
-        </h2>
+        </h1>
         {loading}
         <InfiniteScroll
           dataLength={articles.length} //This is important field to render the next data
@@ -393,7 +400,7 @@ export default function Pages(props) {
 //       loading: false,
 //       totalResults: 0,
 //       page: 1,
-      
+
 //     };
 //     document.title = `${this.capitalizeFirstLetter(
 //       this.props.category
@@ -419,7 +426,7 @@ export default function Pages(props) {
 //       totalResults: parsedData.totalResults,
 //     });
 //      this.props.setProgress(100);
-    
+
 //   }
 //   async componentDidMount() {
 //     this.Updated();
